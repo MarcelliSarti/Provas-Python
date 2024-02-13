@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div class="title"> EEAR - Escola de Especialistas de Aeronáutica - Subdivisão de Avaliação </div>
+    <div class="title"> Avaliação </div>
     <table>
         <tr>
             <td> Número: </td>
@@ -26,27 +26,32 @@
     </table>
     <div class="questions-list">
         {% for question in questions %}
-            <div class="question">
-                <div class="circle-container">
-                    <div class="circle"> {{question.questionNumber}} </div>
-                    <div class="line"></div>
-                </div>
-                
-                {% for q, images in images_dict.items %}
-                    {% if q == question.questionNumber %}
-                        <div>{{question.questionId.body}}</div>
-                        {% if images.bodyImage %} <img src="{% static 'assets/' %}{{images.bodyImage}}" alt="BodyImage" style="max-width: 300px; height: auto;"> {% endif %}
-                        <div>A) {{question.questionId.answer1}}</div>
-                        {% if images.answer1Image %} <img src="{% static 'assets/' %}{{images.answer1Image}}" alt="answer1Image" style="max-width: 300px; height: auto;"> {% endif %}
-                        <div>B) {{question.questionId.answer2}}</div>
-                        {% if images.answer2Image %} <img src="{% static 'assets/' %}{{images.answer2Image}}" alt="answer2Image" style="max-width: 300px; height: auto;"> {% endif %}
-                        <div>C) {{question.questionId.answer3}}</div>
-                        {% if images.answer3Image %} <img src="{% static 'assets/' %}{{images.answer3Image}}" alt="answer3Image" style="max-width: 300px; height: auto;"> {% endif %}
-                        <div>D) {{question.questionId.answer4}}</div>
-                        {% if images.answer4Image %} <img src="{% static 'assets/' %}{{images.answer4Image}}" alt="answer4Image" style="max-width: 300px; height: auto;"> {% endif %}
-                    {% endif %}
-                {% endfor %}
+        <div class="question">
+            <div class="circle-container">
+                <div class="circle"> {{question.questionNumber}} </div>
+                <div class="line"></div>
             </div>
+
+            {% for q, images in images_dict.items %}
+            {% if q == question.questionNumber %}
+            <div>{{question.questionId.body}}</div>
+            {% if images.bodyImage %} <img src="{% static 'assets/' %}{{images.bodyImage}}" alt="BodyImage"
+                style="max-width: 300px; height: auto;"> {% endif %}
+            <div>A) {{question.questionId.answer1}}</div>
+            {% if images.answer1Image %} <img src="{% static 'assets/' %}{{images.answer1Image}}" alt="answer1Image"
+                style="max-width: 300px; height: auto;"> {% endif %}
+            <div>B) {{question.questionId.answer2}}</div>
+            {% if images.answer2Image %} <img src="{% static 'assets/' %}{{images.answer2Image}}" alt="answer2Image"
+                style="max-width: 300px; height: auto;"> {% endif %}
+            <div>C) {{question.questionId.answer3}}</div>
+            {% if images.answer3Image %} <img src="{% static 'assets/' %}{{images.answer3Image}}" alt="answer3Image"
+                style="max-width: 300px; height: auto;"> {% endif %}
+            <div>D) {{question.questionId.answer4}}</div>
+            {% if images.answer4Image %} <img src="{% static 'assets/' %}{{images.answer4Image}}" alt="answer4Image"
+                style="max-width: 300px; height: auto;"> {% endif %}
+            {% endif %}
+            {% endfor %}
+        </div>
         {% endfor %}
     </div>
     <footer>
