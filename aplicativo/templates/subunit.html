@@ -1,0 +1,92 @@
+{% extends 'sideBar.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/subunit.css' %}">
+<script src="{% static 'scripts/modal.js' %}"></script>
+
+<div class="page-content">
+    <div class="title">
+        <p class="table-title"> Total de Questões por Sub Unidade da Disciplina {{subjectId}} </p>
+        {% if user.editQuestion == 1 %} <a class="button" href="{% url 'provas:insertQuestion' %}"> + Adicionar </a>
+        {% endif %}
+    </div>
+
+    <table>
+        <caption>Total de Questões por SubUnidade da Disciplina {{subjectId}} </caption>
+        <thead>
+            <th class="center"> Unidade </th>
+            <th class="center"> Sub-Unidade </th>
+            <th> Título da sub-unidade </th>
+            <th class="center"> Número de Questões</th>
+            <th class="center"> Questões na prova </th>
+            <th class="center"> Número Mínimo de Questões</th>
+            <th></th>
+        </thead>
+
+        <tbody>
+            {% for subunit in subunits %}
+            <tr {% if subunit.qtd_questoes < subunit.numberMinQuestions %} class="danger" {% endif %}>
+                <td class="center"> {{subunit.unit}} </td>
+                <td class="center"> {{subunit.subunit}} </td>
+                <td> {{subunit.caption}} </td>
+                <td class="center"> {{subunit.qtd_questoes}} </td>
+                <td class="center ch">
+                    {{subunit.ch}}
+                    {%if user.editSubjectCH == 1 %}<div
+                        onclick="openAddModal({'field1': '{{subjectId}}', 'field2': '{{subunit.unit}}', 'field3': '{{subunit.subunit}}', 'field4': '{{subunit.ch}}', 'field5': '{{subunit.caption }}', 'field6': '{{subunit.multiplicador}}'}, 'Carga Horária', 'edit')">
+                        <img src="{% static 'assets/edit.png' %}" alt="edit-icon">
+                    </div> {% endif %}
+                </td>
+                <td class="center"> {{subunit.numberMinQuestions }} </td>
+                <td> {% if subunit.qtd_questoes < subunit.numberMinQuestions %} <img
+                        src="{% static 'assets/danger.png' %}" alt="danger-icon"> {% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div id="addModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-title">
+            <span id="addModal-title"> Editar Carga Horária </span>
+            <span class="close" onclick="closeModal('add')">&times;</span>
+        </div>
+        <div class="forms">
+            <form class="form-content" method="POST" action="{% url 'provas:saveCh' subjectId %}">
+                {% csrf_token %}
+                <div class="field">
+                    <p> * Disciplina: </p>
+                    <input type="text" name="disciplina" id="field1" readonly>
+                </div>
+                <div class="field">
+                    <p> * Unidade: </p>
+                    <input type="text" name="unidade" id="field2" readonly>
+                </div>
+                <div class="field">
+                    <p> * Sub-Unidade: </p>
+                    <input type="text" name="subunidade" id="field3" readonly>
+                </div>
+                <div class="field">
+                    <p> * Tempo de Aula: </p>
+                    <input type="text" name="ch" id="field4" required>
+                </div>
+                <div class="field">
+                    <p> * Título da sub-unidade: </p>
+                    <input type="text" name="caption" id="field5" required>
+                </div>
+                <div class="field">
+                    <p> * multiplicador: </p>
+                    <input type="text" name="multiplicador" id="field6" required>
+                </div>
+                <input type="submit" class="button" value="Salvar">
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

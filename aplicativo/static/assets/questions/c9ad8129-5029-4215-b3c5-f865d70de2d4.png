@@ -1,0 +1,12 @@
+<Funcionario>
+	<Func>
+		<Nome> Márcia Silva </Nome>
+		<Cargo> Psicóloga </Cargo>
+		<Salario> 1350,00 </Salario>
+	</Func>
+	<Func>
+		<Nome> André Nunes </Nome>
+		<Cargo> Geólogo </Cargo>
+		<Salario> 1150,00 </Salario>
+	</Func>
+</Funcionario>

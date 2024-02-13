@@ -1,0 +1,76 @@
+{% extends 'sideBar.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/questionsDetails.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/question.css' %}">
+
+<div class="page-content">
+    <div class="question">
+        <div class="question-title">
+            <div class="question-subtitle">
+                <p> Questão: {{question.id}} </p>
+                {% if question.status == 0 and user.editQuestion == 1 %}
+                <a href=" {% url 'provas:editQuestion' subjectId=subjectId questionId=question.id %}" class="tooltip"
+                    data-tooltip="Editar Questão">
+                    <img src="{% static 'assets/edit.png' %}" alt="edit-icon">
+                </a>
+                {% else %}
+                <img class="readonly" src="{% static 'assets/edit.png' %}" alt="edit-icon">
+                {% endif %}
+            </div>
+            <div class="tag status{{question.status}}">
+                {% if question.status == 0 %} Ativo {% else %} Inativo {% endif %}
+            </div>
+            <div
+                class="tag facility-{% if question.facility >= 80 %}facil{% elif question.facility <= 20 %}dificil{% else %}media{% endif %}">
+                {% if question.facility >= 80 %} Fácil
+                {% elif question.facility <= 20 %} Difícil {% else %} Média {% endif %} </div>
+            </div>
+            <div class="question-info">
+                <span> <b> Matéria: </b> {{question.subjectId.id}} </span>
+                <div>
+                    <span> <b> Unidade: </b> {{question.unit}} </span>
+                    <span> <b> SubUnidade: </b> {{question.subUnit}} </span>
+                </div>
+            </div>
+            <div class="question-content">
+                <span> {{question.body}} </span>
+                {% if bodyImage %}
+                <img src="{% static 'assets/' %}{{ bodyImage }}" alt="Imagem da Questão"
+                    style="max-width: 300px; height: auto;">
+                {% endif %}
+                <div class="question-option {% if question.rightAnswer == 'A' %}selected{% endif %}">
+                    <span> <b>a)</b> {{question.answer1}} </span>
+                </div>
+                {% if answer1Image %}
+                <img src="{% static 'assets/' %}{{ answer1Image }}" alt="Imagem da Questão"
+                    style="max-width: 300px; height: auto;">
+                {% endif %}
+                <div class="question-option {% if question.rightAnswer == 'B' %}selected{% endif %}">
+                    <span> <b>b)</b> {{question.answer2}} </span>
+                </div>
+                {% if answer2Image %}
+                <img src="{% static 'assets/' %}{{ answer2Image }}" alt="Imagem da Questão"
+                    style="max-width: 300px; height: auto;">
+                {% endif %}
+                <div class="question-option {% if question.rightAnswer == 'C' %}selected{% endif %}">
+                    <span> <b>c)</b> {{question.answer3}} </span>
+                </div>
+                {% if answer3Image %}
+                <img src="{% static 'assets/' %}{{ answer3Image }}" alt="Imagem da Questão"
+                    style="max-width: 300px; height: auto;">
+                {% endif %}
+                <div class="question-option {% if question.rightAnswer == 'D' %}selected{%endif %}">
+                    <span> <b>d)</b> {{question.answer4}} </span>
+                </div>
+                {% if answer4Image %}
+                <img src="{% static 'assets/' %}{{ answer4Image }}" alt="Imagem da Questão"
+                    style="max-width: 300px; height: auto;">
+                {% endif %}
+            </div>
+            <div class="question-info">
+                <span> <b> Autor: </b> {{question.author}} </span>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

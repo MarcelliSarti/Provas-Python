@@ -1,0 +1,3 @@
+function printGabarito() {
+    window.print()
+}

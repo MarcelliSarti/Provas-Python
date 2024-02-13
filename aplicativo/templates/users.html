@@ -1,0 +1,133 @@
+{% extends 'sideBar.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/users.css' %}">
+<script src="{% static 'scripts/modal.js' %}"></script>
+<script src="{% static 'scripts/users.js' %}"></script>
+
+<div class="page-content">
+    <div class="title">
+        <p class="table-title">Usuários</p>
+        <div class="button" onclick="openAddModal({}, 'Usuário', 'add')">+ Adicionar</div>
+    </div>
+
+    <table>
+        <caption>Cursos</caption>
+
+        <thead>
+            <th> Login </th>
+            <th> Posto/Graduação </th>
+            <th> Nome Completo </th>
+            <th></th>
+            <th></th>
+        </thead>
+
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{user.username}}</td>
+                <td>{{user.hyerarchy.caption}}</td>
+                <td>{{user.realName}}</td>
+                <td class="center"
+                    onclick="openAddModal({'field1': '{{user.hyerarchy.hyerarchy}}', 'field2': '{{user.username}}', 'field3': '{{user.realName}}'}, 'Usuário', 'edit')">
+                    <img src="{% static 'assets/edit.png' %}" alt="edit-icon">
+                </td>
+                <td class="center" onclick='openDeleteModal("{{user.username}}", "Usuário", "users")'>
+                    <img src="{% static 'assets/delete.png' %}" alt="delete-icon">
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">
+                <span id="addModal-title"> Inserir Usuário </span>
+                <span class="close" onclick="closeModal('add')">&times;</span>
+            </div>
+            <div class="forms">
+                <form class="form-content" method="POST" action="{% url 'provas:userSave' %}">
+                    {% csrf_token %}
+                    <div class="form-page active" id="page1">
+                        <div class="field">
+                            <p> * Posto Graduação: </p>
+                            <select id="field1" name="hyerarchy" required>
+                                <option value=""></option>
+                                {% for h in hyerarchies %}
+                                <option id="{{h.hyerarchy}}" value="{{h.hyerarchy}}">{{h.caption}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="field">
+                            <p> * Usuário: </p>
+                            <input type="text" name="username" id="field2" required>
+                        </div>
+                        <div class="field">
+                            <p> * Nome completo: </p>
+                            <input type="text" name="realName" id="field3" required>
+                        </div>
+                        <div class="field">
+                            <p> * Digite a senha atual: </p>
+                            <input type="password" name="senha-atual" required>
+                        </div>
+                        <div class="field">
+                            <p> * Digite a nova senha: </p>
+                            <input type="password" name="senha-nova">
+                        </div>
+                        <div class="field">
+                            <p> * Confirme a nova senha: </p>
+                            <input type="password" name="senha-confirmacao">
+                        </div>
+                        <button type="button" class="button resize right"
+                            onclick="nextPage('page1', 'page2')">Próximo</button>
+                    </div>
+                    <div class="form-page" id="page2">
+                        <p> Selecione os acessos do Usuário: </p>
+                        <div class="checkbox">
+                            <input type="checkbox" id="selectAll" onclick="selectAllPermissions()"> <span> Selecionar
+                                tudo </span>
+                        </div>
+                        {% for id, access in access_map.items %}
+                        <div class="checkbox">
+                            <input type="checkbox" id="{{access.id}}" name="{{access.id}}"> <span> {{access.caption}}
+                            </span>
+                        </div>
+                        {% endfor %}
+                        <div class="buttons">
+                            <button type="button" class="button resize cancel"
+                                onclick="nextPage('page2', 'page1')">Anterior</button>
+                            <input type="submit" class="button resize" value="Salvar">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">
+                <span id="deleteModal-title"> Deletar Usuário </span>
+                <span class="close" onclick="closeModal('delete')">&times;</span>
+            </div>
+            <div class="delete-modal">
+                <div class="delete-modal-img">
+                    <img src=" {% static 'assets/delete2.png' %}" alt="delete-icon">
+                </div>
+                <p class="center"> Tem certeza que deseja deletar o Usuário? </p>
+                <div class="buttons">
+                    <div class="button cancel" onclick="closeModal('delete')"> Cancelar </div>
+                    <a id="deleteLink" href="">
+                        <div class="button delete"> Deletar </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

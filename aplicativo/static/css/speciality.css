@@ -1,0 +1,65 @@
+.resize{
+    width: 30%;
+}
+
+.resize:hover{
+    width: 31%;
+}
+
+/* Estilo para a caixa de seleção personalizada */
+.multiselect {
+    display: inline-block;
+    border: 1px solid #060A4C;
+    border-radius: 5px;
+    position: relative;
+}
+
+/* Estilo para a área de exibição dos itens selecionados */
+.selected-items {
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+    overflow-y: auto;
+    cursor: pointer;
+    
+    .item {
+        padding: 5px;
+        background-color: #8B8DAB;
+        border: 1px solid #8B8DAB;
+        border-radius: 5px;
+    }
+}
+
+/* Estilo para a caixa de pesquisa */
+.search-box {
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Estilo para as opções filtradas */
+.options {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    background-color: #fff;
+    max-height: 150px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+/* Estilo para as opções filtradas quando visíveis */
+.show-options {
+    display: block;
+}
+
+/* Estilo para as opções individuais */
+.option {
+    padding: 5px;
+    cursor: pointer;
+    color: black;
+}
+
+.option:hover {
+    background-color: #8B8DAB;
+    color: white;
+}

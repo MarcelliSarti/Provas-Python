@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title> Login </title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/snackbar.css' %}">
+    <script src="{% static 'scripts/modal.js' %}"></script>
+</head>
+
+<body>
+    <div class="screen">
+        <div class="text"> </div>
+        <div class="main">
+            <form class="forms" method="POST" action="{% url 'provas:login' %}">
+                {% csrf_token %}
+                <div class="login">
+                    <div class="circle">
+                        <img src="{% static 'assets/user.png' %}" alt="logo">
+                    </div>
+                    <div class="field">
+                        <img src="{% static 'assets/user2.png' %}" alt="User">
+                        <input type="text" name="username" required>
+                    </div>
+                    <div class="field">
+                        <img src="{% static 'assets/locker.png' %}" alt="Locker">
+                        <input type="password" name="password" required>
+                    </div>
+                </div>
+                <input type="submit" class="button" value="Login">
+            </form>
+            <div class="image">
+                <img src="{% static 'assets/login.webp' %}" alt="Foguete Login">
+            </div>
+        </div>
+        <div class="text"> </div>
+    </div>
+
+    {% if messages %}
+    {{messages}}
+    {% for message in messages %}
+    {{message.tag}}
+    <div id="snackbar">
+        <img id="snackbar-img" src="{% static 'assets/' %}{{ message.tags }}.png" alt="check-icon">
+        <span id="snackbar-message"> Oi </span>
+    </div>
+    <script>
+        exibirSnackbar('{{message.tags}}', '{{message}}');
+    </script>
+    {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+</body>
+
+</html>

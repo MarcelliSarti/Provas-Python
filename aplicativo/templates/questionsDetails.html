@@ -1,0 +1,104 @@
+{% extends 'sideBar.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/questionsDetails.css' %}">
+<script src="{% static 'scripts/modal.js' %}"></script>
+
+<div class="page-content">
+    <div class="title">
+        <p class="table-title"> Lista de Questões da Disciplina {{subjectId}} </p>
+        {% if user.editQuestion == 1 %} <a class="button" href="{% url 'provas:insertQuestion' %}"> + Adicionar </a>
+        {% endif %}
+    </div>
+
+    <table>
+        <caption> Lista de Questões da Disciplina {{subjectId}} </caption>
+        <thead>
+            <th class="center"> Id </th>
+            <th class="center"> Unidade </th>
+            <th class="center"> Sub-Unidade </th>
+            <th class="center"> Resposta </th>
+            <th class="center"> Índice de facilidade </th>
+            <th class="center"> Último uso</th>
+            <th class="center"> Status</th>
+            <th class="center"> Autor </th>
+            {% if user.previewQuestion == 1 %} <th></th> {% endif %}
+            {% if user.editQuestion == 1 %} <th> Editar </th> {% endif %}
+            {% if user.deleteQuestion == 1 %} <th> Deletar </th> {% endif %}
+        </thead>
+
+        <tbody>
+            {% for question in questions %}
+            <tr>
+                <td class="center"> {{question.id}} </td>
+                <td class="center"> {{question.unit}} </td>
+                <td class="center"> {{question.subUnit}} </td>
+                <td class="center"> {{question.rightAnswer}} </td>
+                <td class="center">
+                    <div
+                        class="tag facility-{% if question.facility >= 80 %}facil{% elif question.facility <= 20 %}dificil{% else %}media{% endif %}">
+                        {% if question.facility >= 80 %} Fácil
+                        {% elif question.facility <= 20 %} Difícil {% else %} Média {% endif %} </div>
+                </td>
+                <td class="center"> {{question.creation}} </td>
+                <td class="center">
+                    <div class="tag status{{question.status}}">
+                        {% if question.status == 0 %} Ativo {% else %} Inativo {% endif %}
+                    </div>
+                </td>
+                <td class="center"> {{question.author}} </td>
+                {% if user.previewQuestion == 1 %} <td>
+                    <a href=" {% url 'provas:openQuestion' subjectId=subjectId questionId=question.id %}"
+                        class="tooltip" data-tooltip="Visualizar Detalhes">
+                        <img src="{% static 'assets/eye.png' %}" alt="eye-icon">
+                    </a>
+                </td> {% endif %}
+
+                {% if question.status == 0 %}
+                {% if user.editQuestion == 1 %} <td class="center">
+                    <a href=" {% url 'provas:editQuestion' subjectId=subjectId questionId=question.id %}">
+                        <img src="{% static 'assets/edit.png' %}" alt="edit-icon">
+                    </a>
+                </td> {% endif %}
+                {% if user.deleteQuestion == 1 %} <td
+                    onclick="openDeleteModal('{{question.id}}', 'Questão', 'questions')" class="center">
+                    <img src="{% static 'assets/delete.png' %}" alt="delete-icon">
+                </td> {% endif %}
+                {% else %}
+                {% if user.editQuestion == 1 %} <td class="readonly center"> <img src="{% static 'assets/edit.png' %}"
+                        alt="edit-icon"> </td> {% endif %}
+                {% if user.deleteQuestion == 1 %} <td class="readonly center"> <img
+                        src="{% static 'assets/delete.png' %}" alt="delete-icon"> </td> {% endif %}
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">
+                <span id="deleteModal-title"> Deletar Questão </span>
+                <span class="close" onclick="closeModal('delete')">&times;</span>
+            </div>
+            <div class="delete-modal">
+                <div class="delete-modal-img">
+                    <img src=" {% static 'assets/delete2.png' %}" alt="delete-icon">
+                </div>
+                <p> Tem certeza que deseja inativar a questão? </p>
+                <div class="buttons">
+                    <div class="button cancel" onclick="closeModal('delete')"> Cancelar </div>
+                    <a id="deleteLink" href="">
+                        <div class="button delete"> Deletar </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

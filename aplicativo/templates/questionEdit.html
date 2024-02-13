@@ -1,0 +1,176 @@
+{% extends 'sideBar.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/questionsDetails.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/questionEdit.css' %}">
+<script src="{% static 'scripts/questionEdit.js' %}"></script>
+
+<div class="forms">
+    {% if mode == 'edit' %}
+    <form class="form-content" method="POST"
+        action="{% url 'provas:saveEditQuestion' subjectId=subjectId questionId=question.id%}"
+        enctype="multipart/form-data">
+        {% else %}
+        <form class="form-content" method="POST" action="{% url 'provas:saveInsertQuestion'  %}"
+            enctype="multipart/form-data">
+            {% endif %}
+            {% csrf_token %}
+            <div class="field">
+                <p> Disciplina: </p>
+                <select id="subject" name="subject">
+                    {% for subj in subjects %}
+                    <option value="{{subj.id}}" {% if subj.id == subjectId %} selected {% endif %}>{{subj.id}} -
+                        {{subj.caption}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="field">
+                <p> Autor: </p>
+                <input type="text" name="author"
+                    value="{% if question %} {{question.author}} {% else %} {{author}} {% endif %}" required>
+            </div>
+            <div class="field">
+                <p> Data de criação: </p>
+                <input type="text" name="creation_date"
+                    value="{% if question %} {{question.creation}} {% else %} {{creation}} {% endif %}" readonly>
+            </div>
+            <div class="field">
+                <p> Dificuldade: </p>
+                <select id="facility" name="facility">
+                    <option value="100" {% if question.facility >= 80 %} selected {% endif %} >Fácil</option>
+                    <option value="50" {% if question.facility > 20 and question.facility < 80 %} selected {% endif %}>
+                            Médio</option>
+                    <option value="10" {% if question.facility <= 20 %} selected {% endif %}>Difícil</option>
+                </select>
+            </div>
+            <div class="group-field">
+                <div class="field">
+                    <p> Unidade: </p>
+                    <input type="text" name="unit" value="{{question.unit}}" required>
+                </div>
+                <div class="field">
+                    <p> Sub-unidade: </p>
+                    <input type="text" name="subunit" value="{{question.subUnit}}" required>
+                </div>
+            </div>
+            <div class="field">
+                <p> Referência: </p>
+                <input type="text" name="reference" name="reference" value="{{question.reference}}" required>
+            </div>
+            <div class="field">
+                <p> Questão: </p>
+                <textarea name="body" required> {{question.body}} </textarea>
+                <input type="file" name="bodyImage" accept="image/*"
+                    onchange="mostrarImagemSelecionada(this, 'bodyImage')">
+                <div class="image-container">
+                    {% if bodyImage %}
+                    <img id="bodyImage" src="{% static 'assets/' %}{{bodyImage}}" alt="Imagem da Questão"
+                        style="max-width: 300px; height: auto;">
+                    <button type="button" onclick="removerImagem('bodyImage')" id="removebodyImage"
+                        class="remove-button">X</button>
+                    {% else %}
+                    <img id="bodyImage" src="#" alt="Imagem da Questão"
+                        style="display: none;max-width: 300px; height: auto;">
+                    <button type="button" onclick="removerImagem('bodyImage')" id="removebodyImage"
+                        class="remove-button" style="display: none;">X</button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="field">
+                <p> Alternativa A: </p>
+                <textarea name="answer1" required> {{question.answer1}} </textarea>
+                <input type="file" name="answer1Image" accept="image/*"
+                    onchange="mostrarImagemSelecionada(this, 'answer1Image')">
+                <div class="image-container">
+                    {% if answer1Image %}
+                    <img id="answer1Image" src="{% static 'assets/' %}{{answer1Image}}" alt="Imagem da Resposta A"
+                        style="max-width: 300px; height: auto;">
+                    <button type="button" onclick="removerImagem('answer1Image')" id="removeanswer1Image"
+                        class="remove-button">X</button>
+                    {% else %}
+                    <img id="answer1Image" src="#" alt="Imagem da Resposta A"
+                        style="display: none;max-width: 300px; height: auto;">
+                    <button type="button" onclick="removerImagem('answer1Image')" id="removeanswer1Image"
+                        class="remove-button" style="display: none;">X</button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="field">
+                <p> Alternativa B: </p>
+                <textarea name="answer2" required> {{question.answer2}} </textarea>
+                <input type="file" name="answer2Image" accept="image/*"
+                    onchange="mostrarImagemSelecionada(this, 'answer2Image')">
+                <div class="image-container">
+                    {% if answer2Image %}
+                    <img id="answer2Image" src="{% static 'assets/' %}{{answer2Image}}" alt="Imagem da Resposta B"
+                        style="max-width: 300px; height: auto;">
+                    <button type="button" onclick="removerImagem('answer2Image')" id="removeanswer2Image"
+                        class="remove-button">X</button>
+                    {% else %}
+                    <img id="answer2Image" src="#" alt="Imagem da Resposta B"
+                        style="display: none;max-width: 300px; height: auto;">
+                    <button type="button" onclick="removerImagem('answer2Image')" id="removeanswer2Image"
+                        class="remove-button" style="display: none;">X</button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="field">
+                <p> Alternativa C: </p>
+                <textarea name="answer3" required> {{question.answer3}} </textarea>
+                <input type="file" name="answer3Image" accept="image/*"
+                    onchange="mostrarImagemSelecionada(this, 'answer3Image')">
+                <div class="image-container">
+                    {% if answer3Image %}
+                    <img id="answer3Image" src="{% static 'assets/' %}{{answer3Image}}" alt="Imagem da Resposta C"
+                        style="max-width: 300px; height: auto;">
+                    <button type="button" onclick="removerImagem('answer3Image')" id="removeanswer3Image"
+                        class="remove-button">X</button>
+                    {% else %}
+                    <img id="answer3Image" src="#" alt="Imagem da Resposta C"
+                        style="display: none;max-width: 300px; height: auto;">
+                    <button type="button" onclick="removerImagem('answer3Image')" id="removeanswer3Image"
+                        class="remove-button" style="display: none;">X</button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="field">
+                <p> Alternativa D: </p>
+                <textarea name="answer4" required> {{question.answer4}} </textarea>
+                <input type="file" name="answer4Image" accept="image/*"
+                    onchange="mostrarImagemSelecionada(this, 'answer4Image')">
+                <div class="image-container">
+                    {% if answer4Image %}
+                    <img id="answer4Image" src="{% static 'assets/' %}{{answer4Image}}" alt="Imagem da Resposta D"
+                        style="max-width: 300px; height: auto;">
+                    <button type="button" onclick="removerImagem('answer4Image')" id="removeanswer4Image"
+                        class="remove-button">X</button>
+                    {% else %}
+                    <img id="answer4Image" src="#" alt="Imagem da Resposta D"
+                        style="display: none;max-width: 300px; height: auto;">
+                    <button type="button" onclick="removerImagem('answer4Image')" id="removeanswer4Image"
+                        class="remove-button" style="display: none;">X</button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="field">
+                <p> Opção Correta: </p>
+                <select name="correct-answer">
+                    <option value="A" {% if question.rightAnswer == 'A' %} selected {% endif %}>Alternativa A</option>
+                    <option value="B" {% if question.rightAnswer == 'B' %} selected {% endif %}>Alternativa B</option>
+                    <option value="C" {% if question.rightAnswer == 'C' %} selected {% endif %}>Alternativa C</option>
+                    <option value="D" {% if question.rightAnswer == 'D' %} selected {% endif %}>Alternativa D</option>
+                </select>
+            </div>
+            <div class="buttons">
+                {% if mode == 'edit' %}
+                <a href="{% url 'provas:openQuestion' subjectId=subjectId questionId=question.id%}"
+                    class="cancel button"> Cancelar </a>
+                {% else %}
+                <a href="{% url 'provas:questions' %}" class="cancel button"> Cancelar </a>
+                {% endif %}
+                <input type="submit" class="button" value="Salvar">
+            </div>
+        </form>
+</div>
+{% endblock %}

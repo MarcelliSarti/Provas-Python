@@ -1,0 +1,126 @@
+.page-content {
+    padding: 10px;
+
+    .title {
+        margin: 0 auto;
+        width: 90%;
+        display: flex;
+        justify-content: space-between;
+
+        .table-title {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .button {
+            text-align: center;
+            background-color: #060A4C;
+            padding: 10px;
+            width: 15%;
+            border-radius: 10px;
+        }
+
+        .button:hover {
+            width: 16%;
+            cursor: pointer;
+            opacity: 0.9;
+        }
+    }
+}
+
+/* Estilo para centralizar a tabela horizontalmente */
+table {
+    margin: 0 auto;
+    width: 90%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th {
+    background-color: #8B8DAB;
+    color: white;
+    border-radius: 10px 10px 0 0;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #ECECEC;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #FFFFFF;
+}
+
+td,
+th {
+    padding: 8px;
+    border: 1px solid #dddddd;
+    text-align: left;
+    color: black;
+    border-radius: 0 0 10px 10px;
+}
+
+/* Estilo para ícones na primeira e última coluna */
+td:nth-last-child(2) img,
+td:last-child img {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+}
+
+td:nth-last-child(2):hover,
+td:last-child:hover {
+    cursor: pointer;
+}
+
+/* Estilo para cabeçalho fixo durante o scroll (opcional, pode ser removido se não for necessário) */
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #8B8DAB;
+}
+
+.hidden-row {
+    display: none;
+}
+
+.show-itens {
+    cursor: pointer;
+}
+
+.center {
+    text-align: center;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    color: black;
+}
+
+.tooltip:hover::after {
+    content: attr(data-tooltip);
+    /* Utiliza o valor do atributo data-tooltip como conteúdo */
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+p {
+    color: #060A4C;
+    font-weight: bold;
+}
+
+.readonly {
+    filter: grayscale(100%);
+    opacity: 0.5;
+}

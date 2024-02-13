@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/examLoad.css' %}">
+    <script src="{% static 'scripts/modal.js' %}"></script>
+    <title> Ultra - Sistema Gestão de Avliação</title>
+</head>
+
+<body>
+    <div class="title"> EEAR - Escola de Especialistas de Aeronáutica - Subdivisão de Avaliação </div>
+    <table>
+        <tr>
+            <td> Número: </td>
+            <td colspan="3"> Nome: </td>
+            <td> Data: {{exam.applyDate|date:"d/m/Y"}} </td>
+        </tr>
+        <tr>
+            <td> Série: {{exam.serie}}°</td>
+            <td> Código do teste: {{exam_code}} </td>
+            <td> Matéria: {{exam.subjectId}} </td>
+            <td> Curso: {{exam.courseId}} </td>
+            <td> Especialidade: {{exam.specialityId}} </td>
+        </tr>
+    </table>
+    <div class="questions-list">
+        {% for question in questions %}
+            <div class="question">
+                <div class="circle-container">
+                    <div class="circle"> {{question.questionNumber}} </div>
+                    <div class="line"></div>
+                </div>
+                
+                {% for q, images in images_dict.items %}
+                    {% if q == question.questionNumber %}
+                        <div>{{question.questionId.body}}</div>
+                        {% if images.bodyImage %} <img src="{% static 'assets/' %}{{images.bodyImage}}" alt="BodyImage" style="max-width: 300px; height: auto;"> {% endif %}
+                        <div>A) {{question.questionId.answer1}}</div>
+                        {% if images.answer1Image %} <img src="{% static 'assets/' %}{{images.answer1Image}}" alt="answer1Image" style="max-width: 300px; height: auto;"> {% endif %}
+                        <div>B) {{question.questionId.answer2}}</div>
+                        {% if images.answer2Image %} <img src="{% static 'assets/' %}{{images.answer2Image}}" alt="answer2Image" style="max-width: 300px; height: auto;"> {% endif %}
+                        <div>C) {{question.questionId.answer3}}</div>
+                        {% if images.answer3Image %} <img src="{% static 'assets/' %}{{images.answer3Image}}" alt="answer3Image" style="max-width: 300px; height: auto;"> {% endif %}
+                        <div>D) {{question.questionId.answer4}}</div>
+                        {% if images.answer4Image %} <img src="{% static 'assets/' %}{{images.answer4Image}}" alt="answer4Image" style="max-width: 300px; height: auto;"> {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    <footer>
+        <div></div>
+        <div>ULTRA Prova - Sistema Gestor de Avaliações</div>
+        <div>Continua...</div>
+    </footer>
+    <!-- <script>
+        window.onload = function() {
+            window.print();
+        }
+    </script> -->
+</body>

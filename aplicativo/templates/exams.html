@@ -1,0 +1,167 @@
+{% extends 'sideBar.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/course.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/exams.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="{% static 'scripts/modal.js' %}"></script>
+<script src="{% static 'scripts/exams.js' %}"></script>
+
+<div class="page-content">
+    <div class="title">
+        <p class="table-title">Provas</p>
+        {% if user.createExam == 1 %} <div class="button" onclick="openAddModal({}, 'Provas', 'add')">+ Adicionar</div>
+        {% endif %}
+    </div>
+
+    <table>
+        <caption>Provas</caption>
+
+        <thead>
+            <th> Data </th>
+            <th> Curso </th>
+            <th> Especialidade </th>
+            <th> Disciplina </th>
+            <th> Tipo de Prova </th>
+            <th class="center"> Questões </th>
+            <th class="center">X0</th>
+            <th class="center">X9</th>
+            {% if user.showExamDetails == 1 %} <th></th> {% endif %}
+            {% if user.removeExam == 1 %} <th></th> {% endif %}
+        </thead>
+
+        <tbody>
+            {% for exam in exams %}
+            <tr>
+                <td>{{exam.applyDate}}</td>
+                <td>{{exam.courseId}}</td>
+                <td>{{exam.specialityId}}</td>
+                <td>{{exam.subjectId}}</td>
+                <td>{{exam.examType.description}}</td>
+                <td class="center">{{exam.numberOfQuestions}}</td>
+                <td>
+                    <a href="{% url 'provas:examLoad' examId=exam.id type='X0' %}">
+                        <img src="{% static 'assets/pdf.png' %}" alt="pdf-icon">
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'provas:examLoad' examId=exam.id type='X9' %}">
+                        <img src="{% static 'assets/pdf.png' %}" alt="pdf-icon">
+                    </a>
+                </td>
+                {% if user.showExamDetails == 1 %} <td class="tooltip" data-tooltip="Visualizar Detalhes">
+                    <a href="{% url 'provas:examDetails' exam.id %}">
+                        <img src="{% static 'assets/eye.png' %}" alt="eye-icon">
+                    </a>
+                </td> {% endif %}
+                <!-- <td class="center" onclick="openAddModal({'field1': '{{exam.courseId}}', 'field2': '{{exam.specialityId}}', 'field3': '{{exam.serie}}', 'field4': '{{exam.subjectId}}', 'field5': '{{exam.examType.id}}', 'field6': '{{exam.numberOfQuestions}}', 'field7': '{{exam.applyDate}}'}, 'Provas', 'edit')">
+                    <img src="{% static 'assets/edit.png' %}" alt="edit-icon">
+                </td> -->
+                {% if user.removeExam == 1 %} <td onclick="openDeleteModal('{{exam.id}}', 'Provas', 'exams')">
+                    <img src="{% static 'assets/delete.png' %}" alt="delete-icon">
+                </td> {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">
+                <span id="addModal-title"> Inserir Curso </span>
+                <span class="close" onclick="closeModal('add')">&times;</span>
+            </div>
+            <div class="forms">
+                <form class="form-content" id="exam-form" method="POST" action="{% url 'provas:examSave' %}">
+                    {% csrf_token %}
+                    <div class="field">
+                        <p> * Curso Id: </p>
+                        <select id="field1" name="courseId" onchange="getFieldsValues('courseId')" required>
+                            {% for course in courses %}
+                            <option value="{{course.id}}" id="{{course.id}}">{{course.caption}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="field hidden" id="field-field2">
+                        <p> * Especialidade: </p>
+                        <select id="field2" name="specialityId" onchange="getFieldsValues('specialityId')" required>
+                        </select>
+                    </div>
+                    <div class="field hidden" id="field-field3">
+                        <p> * Série: </p>
+                        <select id="field3" name="serie" onchange="getFieldsValues('specialityId')" required>
+                        </select>
+                    </div>
+                    <div class="field hidden" id="field-field4">
+                        <p> * Disciplina: </p>
+                        <select id="field4" name="subjectId" onchange="getFieldsValues('subjectId')" required>
+                        </select>
+                    </div>
+                    <div class="field hidden" id="field-field5">
+                        <p> * Tipo da prova: </p>
+                        <select id="field5" name="examType" required>
+                            <option value=""></option>
+                            {% for examType in examTypes %}
+                            <option value="{{examType.id}}">{{examType.description}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="field hidden" id="field-field6">
+                        <p> * Quantidade de questões: </p>
+                        <select id="field6" name="numberOfQuestions" required>
+                            <option value=""></option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <div class="field hidden" id="field-field7">
+                        <p> * Data de aplicação da prova: </p>
+                        <input type="date" name="applyDate" id="field7" required>
+                    </div>
+                    <div class="hidden all-checkboxs" id="field-field8">
+                        <div class="checkbox">
+                            <input type="checkbox" id="unit1" name="unit1" checked> <span> Unidade 1 </span>
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" id="unit2" name="unit2" checked> <span> Unidade 2 </span>
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" id="unit3" name="unit3" checked> <span> Unidade 3 </span>
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" id="unit4" name="unit4" checked> <span> Unidade 4 </span>
+                        </div>
+                    </div>
+            </div>
+            <input type="submit" class="button" value="Salvar">
+            </form>
+        </div>
+    </div>
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">
+                <span id="deleteModal-title"> Deletar Questão </span>
+                <span class="close" onclick="closeModal('delete')">&times;</span>
+            </div>
+            <div class="delete-modal">
+                <div class="delete-modal-img">
+                    <img src=" {% static 'assets/delete2.png' %}" alt="delete-icon">
+                </div>
+                <p> Tem certeza que deseja excluir a Prova? </p>
+                <div class="buttons">
+                    <div class="button cancel" onclick="closeModal('delete')"> Cancelar </div>
+                    <a id="deleteLink" href="">
+                        <div class="button delete"> Deletar </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

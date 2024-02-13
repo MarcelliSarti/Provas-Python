@@ -1,0 +1,89 @@
+{% extends 'sideBar.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/examDetails.css' %}">
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v6.4.2/css/all.css">
+<script src="{% static 'scripts/examDetails.js' %}"></script>
+
+<div class="page-content">
+    <div class="title">
+        <p class="table-title"> Detalhes da Prova {{examId}} </p>
+        <div class="button" onclick="printGabarito()">Imprimir Gabarito</div>
+    </div>
+
+    <table id="gabarito">
+        <caption>Provas</caption>
+
+        <thead>
+            <th class="center"> Tipo </th>
+            <th class="center">Questão</th>
+            <th class="center">Id</th>
+            <th class="center">A</th>
+            <th class="center">B</th>
+            <th class="center">C</th>
+            <th class="center">D</th>
+            {% if user.previewQuestion == 1 %} <th></th> {% endif %}
+            {% if user.editQuestion == 1 %} <th></th> {% endif %}
+        </thead>
+
+        <tbody>
+            {% for question in examDetails %}
+            <tr>
+                <td class="center">{{question.classId}}</td>
+                <td class="center">{{question.questionNumber}}</td>
+                <td class="center">
+                    {% if user.previewQuestion == 1 %} <a
+                        href="{% url 'provas:openQuestion' subjectId=question.questionId.subjectId.id questionId=question.questionId.id %}">
+                        {% endif %}
+                        <p>{{question.questionId.id}}</p>
+                        {% if user.previewQuestion == 1 %}
+                    </a> {% endif %}
+                </td>
+                <td class="center">
+                    {% if question.A == 0 %}
+                    <i class="fa-regular fa-circle" style="color: #060A4C;"></i>
+                    {% else %}
+                    <i class="fa-solid fa-circle" style="color: #060A4C;"></i>
+                    {% endif %}
+                </td>
+                <td class="center">
+                    {% if question.B == 0 %}
+                    <i class="fa-regular fa-circle" style="color: #060A4C;"></i>
+                    {% else %}
+                    <i class="fa-solid fa-circle" style="color: #060A4C;"></i>
+                    {% endif %}
+                </td>
+                <td class="center">
+                    {% if question.C == 0 %}
+                    <i class="fa-regular fa-circle" style="color: #060A4C;"></i>
+                    {% else %}
+                    <i class="fa-solid fa-circle" style="color: #060A4C;"></i>
+                    {% endif %}
+                </td>
+                <td class="center">
+                    {% if question.D == 0 %}
+                    <i class="fa-regular fa-circle" style="color: #060A4C;"></i>
+                    {% else %}
+                    <i class="fa-solid fa-circle" style="color: #060A4C;"></i>
+                    {% endif %}
+                </td>
+                {% if user.previewQuestion == 1 %} <td class="center">
+                    <a
+                        href="{% url 'provas:openQuestion' subjectId=question.questionId.subjectId.id questionId=question.questionId.id %}">
+                        <img src="{% static 'assets/eye.png' %}" alt="eye-icon">
+                    </a>
+                </td> {% endif %}
+                {% if user.editQuestion == 1 %} <td class="center">
+                    <a
+                        href="{% url 'provas:editQuestion' subjectId=question.questionId.subjectId.id questionId=question.questionId.id %}">
+                        <img src="{% static 'assets/edit.png' %}" alt="edit-icon">
+                    </a>
+                </td> {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

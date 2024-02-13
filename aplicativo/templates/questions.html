@@ -1,0 +1,50 @@
+{% extends 'sideBar.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+
+<div class="page-content">
+    <div class="title">
+        <p class="table-title"> Questões por Disciplina </p>
+        {% if user.editQuestion == 1 %} <a class="button" href="{% url 'provas:insertQuestion' %}"> + Adicionar </a>
+        {% endif %}
+    </div>
+
+    <table>
+        <caption>Questões</caption>
+
+        <thead>
+            <th> Sigla </th>
+            <th> Descrição da Disciplina </th>
+            <th class="center">Total de Questões</th>
+            {% if user.showQuestions == 1 %} <th></th> {% endif %}
+            {% if user.showQuestions == 1 %} <th></th> {% endif %}
+        </thead>
+
+        <tbody>
+            {% for question in questions %}
+            <tr>
+                <td>
+                    {{question.id}}
+                </td>
+                <td>
+                    <div class="tooltip" data-tooltip="{{question.data_tooltip}}">{{question.caption}}</div>
+                </td>
+                <td class="center">{{question.num_questions}}</td>
+                {% if user.showQuestions == 1 %} <td class="center">
+                    <!-- class="tooltip" data-tooltip="Visualizar Detalhes" -->
+                    <a href=" {% url 'provas:questionDetails' question.url %}" title="Visualizar detalhes"> <img
+                            src="{% static 'assets/more.png' %}" alt="more-icon"> </a>
+                </td> {% endif %}
+                {% if user.showQuestions == 1 %} <td class="center">
+                    <a href=" {% url 'provas:subUnit' question.url %}">
+                        <!-- class="tooltip"  data-tooltip="Visualizar Contagens">  -->
+                        <img src="{% static 'assets/eye.png' %}" title="Visualizar contagens" alt="eye-icon"> </a>
+                </td> {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

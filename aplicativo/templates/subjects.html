@@ -1,0 +1,95 @@
+{% extends 'sideBar.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/subject.css' %}">
+<script src="{% static 'scripts/modal.js' %}"></script>
+
+<div class="page-content">
+    <div class="title">
+        <p class="table-title"> Disciplinas </p>
+        {% if user.editSubject == 1 %} <div class="button" onclick="openAddModal({}, 'Disciplina', 'add')"> + Adicionar
+        </div> {% endif %}
+    </div>
+
+    <table>
+        <caption>Disciplinas</caption>
+
+        <thead>
+            <th> Sigla </th>
+            <th class="center"> Cód Área </th>
+            <th>Descrição</th>
+            {% if user.editSubject == 1 %} <th>Editar</th> {% endif %}
+            {% if user.removeSubject == 1 %} <th>Remover</th> {% endif %}
+        </thead>
+
+        <tbody>
+            {% for subject in subjects %}
+            <tr>
+                <td>{{subject.id}}</td>
+                <td class="center">{{subject.eearNo}}</td>
+                <td>{{subject.caption}}</td>
+                {% if user.editSubject == 1 %} <td class="center"
+                    onclick="openAddModal({'field1': '{{subject.id}}', 'field2': '{{subject.caption}}', 'field3': '{{subject.eearNo}}'}, 'Disciplina', 'edit')">
+                    <img src="{% static 'assets/edit.png' %}" alt="edit-icon">
+                </td> {% endif %}
+                {% if user.removeSubject == 1 %} <td class="center"
+                    onclick="openDeleteModal('{{subject.id}}', 'Disciplina', 'subjects')">
+                    <img src="{% static 'assets/delete.png' %}" alt="delete-icon">
+                </td> {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div id="addModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-title">
+            <span id="addModal-title"> Inserir Curso </span>
+            <span class="close" onclick="closeModal('add')">&times;</span>
+        </div>
+        <div class="forms">
+            <form class="form-content" method="POST" action="{% url 'provas:saveSubject' %}">
+                {% csrf_token %}
+                <div class="field">
+                    <p> * Sigla: </p>
+                    <input type="text" name="sigla" id="field1" required>
+                </div>
+                <div class="field">
+                    <p> * Descrição: </p>
+                    <input type="text" name="descricao" id="field2" required>
+                </div>
+                <div class="field">
+                    <p> * Código Área: </p>
+                    <input type="text" name="cod_area" id="field3" required>
+                </div>
+                <input type="submit" class="button" value="Salvar">
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-title">
+            <span id="deleteModal-title"> Deletar Curso </span>
+            <span class="close" onclick="closeModal('delete')">&times;</span>
+        </div>
+        <div class="delete-modal">
+            <div class="delete-modal-img">
+                <img src=" {% static 'assets/delete2.png' %}" alt="delete-icon">
+            </div>
+            <p class="center"> Tem certeza que deseja deletar o Curso? </p>
+            <div class="buttons">
+                <div class="button cancel" onclick="closeModal('delete')"> Cancelar </div>
+                <a id="deleteLink" href="">
+                    <div class="button delete"> Deletar </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

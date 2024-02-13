@@ -1,0 +1,21 @@
+.tag {
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.status0,
+.facility-facil {
+    border: 1px solid green;
+    color: green;
+}
+
+.status1,
+.facility-dificil {
+    border: 1px solid red;
+    color: red;
+}
+
+.facility-media {
+    border: 1px solid blue;
+    color: blue;
+}

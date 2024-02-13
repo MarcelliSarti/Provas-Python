@@ -1,0 +1,12 @@
+.hidden {
+    visibility: hidden;
+}
+
+.modal-content {
+    margin: 0 auto;
+}
+
+.all-checkboxs {
+    display: flex !important;
+    gap: 10px;
+}

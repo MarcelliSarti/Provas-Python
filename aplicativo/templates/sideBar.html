@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+    <link rel="stylesheet" href="{% static 'css/sideBar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/snackbar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+    <script src="{% static 'scripts/modal.js' %}"></script>
+    <script src="{% static 'scripts/sideBar.js' %}"></script>
+    <title> Sistema Gestor de Avaliações</title>
+</head>
+
+<body>
+    <div class="main">
+        <nav class="sideBar">
+            <div class="sideBar-field logo">
+                <a href="{% url 'provas:index' %}">
+                    <img src="{% static 'assets/logo2.png' %}" alt="logo-icon">
+                </a>
+            </div>
+            {% if user.showCourses == 1 %} <div class="sideBar-field">
+                <a href="{% url 'provas:courses' %}">
+                    <img src="{% static 'assets/courses.png' %}" alt="course-icon">
+                    <span> Cursos </span>
+                </a>
+            </div> {% endif %}
+            {% if user.showSubjects == 1 %} <div class="sideBar-field">
+                <a href="{% url 'provas:subjects' %}">
+                    <img src="{% static 'assets/subjects.png' %}" alt="subjects-icon">
+                    <span> Disciplinas </span>
+                </a>
+            </div> {% endif %}
+            {% if user.showSpecialities == 1 %} <div class="sideBar-field">
+                <a href="{% url 'provas:specialties' %}">
+                    <img src="{% static 'assets/specialty.png' %}" alt="specialty-icon">
+                    <span> Especialidades </span>
+                </a>
+            </div> {% endif %}
+            {% if user.showQuestions == 1 %} <div class="sideBar-field">
+                <a href="{% url 'provas:questions' %}">
+                    <img src="{% static 'assets/questions.png' %}" alt="questions-icon">
+                    <span> Questões </span>
+                </a>
+            </div> {% endif %}
+            {% if user.showExams == 1 %} <div class="sideBar-field">
+                <a href="{% url 'provas:exams' %}">
+                    <img src="{% static 'assets/exams.png' %}" alt="exams-icon">
+                    <span> Provas </span>
+                </a>
+            </div> {% endif %}
+        </nav>
+        <div class="page">
+            <nav class="navBar">
+                <span> Sistema Gestor de Avaliações </span>
+                <div class="dropdown">
+                    <div class="dropdown-btn sideBar-field" onclick="toggleDropdown()">
+                        <a>
+                            <div class="circle">
+                                <img src="{% static 'assets/user2.png' %}" alt="user2-icon">
+                            </div>
+                            <span> {{user.realName}} </span>
+                        </a>
+                    </div>
+                    <div class="dropdown-content" id="myDropdown">
+                        <a href="#" onclick="openPasswordModal('{{user.username}}')">Trocar senha</a>
+                        {% if user.adminUsers == 1 %} <a href="{% url 'provas:users' %}">Gerenciar usuários</a>
+                        {%endif%}
+                        <a href="{% url 'provas:logout' %}">Logout</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="page-content">
+                <div id="passwordModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-title">
+                            <span id="passwordModal-title"> Trocar Senha </span>
+                            <span class="close" onclick="closeModal('password')">&times;</span>
+                        </div>
+                        <div class="forms">
+                            <form class="form-content" action="{% url 'provas:userChangePassWord' user.username %}"
+                                method="POST">
+                                {% csrf_token %}
+                                <div class="field">
+                                    <p> * Digite a senha atual: </p>
+                                    <input type="password" name="senha-atual" required>
+                                </div>
+                                <div class="field">
+                                    <p> * Digite a nova senha: </p>
+                                    <input type="password" name="senha-nova" required>
+                                </div>
+                                <div class="field">
+                                    <p> * Confirme a nova senha: </p>
+                                    <input type="password" name="senha-confirmacao" required>
+                                </div>
+                                <input type="submit" class="button" value="Salvar">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% if messages %}
+                {{messages}}
+                {% for message in messages %}
+                {{message.tag}}
+                <div id="snackbar">
+                    <img id="snackbar-img" src="{% static 'assets/' %}{{ message.tags }}.png" alt="check-icon">
+                    <span id="snackbar-message"> Oi </span>
+                </div>
+                <script>
+                    exibirSnackbar('{{message.tags}}', '{{message}}');
+                </script>
+                {% endfor %}
+                {% endif %}
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+.resize{
+    width: 30%;
+}
+
+.resize:hover{
+    width: 31%;
+}
+
+.modal-content {
+    margin: 3% auto;
+}

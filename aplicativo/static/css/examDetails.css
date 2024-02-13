@@ -1,0 +1,27 @@
+@media print {
+    body *, #gabarito caption {
+      visibility: hidden;
+    }
+
+    #gabarito, #gabarito * {
+      visibility: visible;
+    }
+
+    #gabarito {
+      position: absolute;
+      left: 0;
+      top: 0;
+      border-collapse: collapse;
+    }
+
+    th, td{
+      border: 1px solid black;
+      padding: 8px;
+    }
+
+    #gabarito td:nth-child(3), #gabarito th:nth-child(3),
+    #gabarito td:nth-child(8), #gabarito th:nth-child(8),
+    #gabarito td:nth-child(9), #gabarito th:nth-child(9) {
+        display: none;
+    }
+  }

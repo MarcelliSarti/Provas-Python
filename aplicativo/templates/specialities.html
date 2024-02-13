@@ -1,0 +1,140 @@
+{% extends 'sideBar.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/speciality.css' %}">
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v6.4.2/css/all.css">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="{% static 'scripts/speciality.js' %}"></script>
+
+<div class="page-content">
+    <div class="title">
+        <p class="table-title"> Especialidades </p>
+        {% if user.editSpeciality == 1 %} <div class="button" onclick="openAddModal({}, 'Especialidade', 'add')">+
+            Adicionar</div> {% endif %}
+    </div>
+
+    <table>
+        <caption>Cursos</caption>
+
+        <thead>
+            <th></th>
+            <th> Sigla </th>
+            <th> Curso </th>
+            <th> Descrição </th>removeSpeciality
+            {% if user.editSpeciality == 1 %} <th class="center"> Editar </th> {% endif %}
+            {% if user.removeSpeciality == 1 %} <th class="center"> Remover </th> {% endif %}
+        </thead>
+
+        <tbody>
+            {% for speciality in specialities %}
+            {% for spec, series_dict in speciality.items %}
+            <tr class="principal">
+                <td class="show-itens center" onclick="toggleDetails('{{ spec.id }}')">
+                    <img src="{% static 'assets/colapse.png' %}" alt="colapse-icon">
+                </td>
+                <td>{{spec.name}}</td>
+                <td>{{spec.courseId}}</td>
+                <td>{{spec.caption}}</td>
+                {% if user.editSpeciality == 1 %} <td class="center"
+                    onclick="openAddModal({'field1': '{{spec.name}}', 'field2': '{{spec.courseId}}', 'field3': '{{spec.caption}}'}, 'Especialidade', 'edit')">
+                    <img src="{% static 'assets/edit.png' %}" alt="edit-icon">
+                </td> {% endif %}
+                {% if user.removeSpeciality == 1 %} <td class="center"
+                    onclick="openDeleteModal('{{spec.id}}', 'Especialidade', 'specialties')">
+                    <img src="{% static 'assets/delete.png' %}" alt="delete-icon">
+                </td> {% endif %}
+            </tr>
+
+            {% for serie, subjects in series_dict.items %}
+            <tr class="hidden-row" data-spec-id="{{ spec.id }}">
+                <td class="center">
+                    <i class="fa-regular fa-circle" style="color: #8b8da8;"></i>
+                </td>
+                <td> Série: {{ serie }}</td>
+                <td colspan="4"> Matérias:
+                    {% for sub in subjects %}
+                    <div class="tooltip" data-tooltip="{{ sub.subjectName}}">
+                        {{sub.subjectId}}{% if not forloop.last%}, {% endif %} </div>
+                    {%endfor%}
+                </td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">
+                <span id="addModal-title"> Inserir Curso </span>
+                <span class="close" onclick="closeModal('add')">&times;</span>
+            </div>
+            <div class="forms">
+                <form class="form-content" id="speciality-form" method="POST" action="{% url 'provas:saveSpecialty' %}">
+                    {% csrf_token %}
+                    <div class="form-page active" id="page1">
+                        <div class="field">
+                            <p> * Nome: </p>
+                            <input type="text" name="name" id="field1" required>
+                        </div>
+                        <div class="field">
+                            <p> * Curso Id: </p>
+                            <select id="field2" name="courseId">
+                                {% for course in courses %}
+                                <option value="{{course.id}}">{{course.id}} - {{course.caption}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="field">
+                            <p> * Descrição: </p>
+                            <input type="text" name="description" id="field3" required>
+                        </div>
+                        <button type="button" class="button resize right"
+                            onclick="nextPage('page1', 'page2')">Próximo</button>
+                    </div>
+                    <!-- <div class="form-page" id="page2">
+                        <div class="multiselect">
+                            <div class="selected-items"> <p> Selecionados: </p></div>
+                            <div class="search-box">
+                                <input type="text" placeholder="Pesquisar" onclick="toggleOptions()" oninput="filterOptions(this.value)">
+                            </div>
+                            <div class="options" onclick="handleOptionClick(event)"></div>
+                        </div>
+                        <div class="buttons"> 
+                            <button type="button" class="button cancel" onclick="nextPage('page2', 'page1')">Anterior</button>
+                            <input type="submit" class="button" value="Salvar">
+                        </div>
+                    </div> -->
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">
+                <span id="deleteModal-title"> Deletar Especialidade </span>
+                <span class="close" onclick="closeModal('delete')">&times;</span>
+            </div>
+            <div class="delete-modal">
+                <div class="delete-modal-img">
+                    <img src=" {% static 'assets/delete2.png' %}" alt="delete-icon">
+                </div>
+                <p class="center"> Tem certeza que deseja deletar a Especialidade? </p>
+                <div class="buttons">
+                    <div class="button cancel" onclick="closeModal('delete')"> Cancelar </div>
+                    <a id="deleteLink" href="">
+                        <div class="button delete"> Deletar </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="snackbar">
+        <img id="snackbar-img" src="{% static 'assets/error.png' %}" alt="check-icon">
+        <span id="snackbar-message"> Oi </span>
+    </div>
+</div>
+{% endblock %}

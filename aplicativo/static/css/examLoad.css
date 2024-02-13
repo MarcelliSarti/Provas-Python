@@ -1,0 +1,103 @@
+body {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    margin: 0;
+    max-width: 100%;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: left;
+}
+
+.title {
+    font-weight: 700;
+    font-size: 25px;
+    padding-bottom: 10px;
+}
+
+.questions-list{
+    columns: 2;
+    column-gap: 20px; 
+    border-right: 1px solid #000;
+    border-left: 1px solid #000;
+    border-bottom: 1px solid #000;
+    position: relative;
+}
+
+.questions-list::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 50%;
+    border-right: 1px solid #000; /* Adiciona uma linha vertical entre as colunas */
+}
+
+.question{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    break-inside: avoid; 
+    word-wrap: break-word; /* Permite quebras de palavras */
+    text-align: justify;
+    font-size: 12px;
+}
+
+.question span{
+    text-align: justify;
+}
+
+.circle-container {
+    display: flex;
+    align-items: center;
+}
+
+.circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: lightgray;
+    border: 1px solid lightgray;
+}
+
+.line {
+    content: '';
+    border-top: 1px solid #000;
+    width: 100%;
+}
+
+footer {
+    display: none;
+}
+
+@media print {
+    /* Defina o estilo do rodapé */
+    footer {
+        display: flex;
+        align-self: center;  
+        justify-content: space-between;
+        text-align: center;
+        padding: 5px;
+        padding-right: 15px;
+        border: 1px solid black;
+        background-color: #fff;
+        z-index: 5;
+        position: fixed;
+        bottom: 0;
+        width: 90%;
+        font-size: 12px;
+    }
+}

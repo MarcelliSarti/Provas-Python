@@ -1,0 +1,37 @@
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.button{
+    width: 30%;
+}
+
+.button:hover{
+    width: 31%;
+}
+
+textarea{
+    height: 150px;
+}
+
+.image-container {
+    position: relative;
+    margin-top: 10px;
+    max-width: 300px; /* Ajuste conforme necessário */
+    height: auto;
+}
+
+.remove-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #00264D;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 10px;
+    border-radius: 50%;
+}

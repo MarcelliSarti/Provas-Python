@@ -1,0 +1,15 @@
+.ch {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    gap: 10px;
+}
+
+.modal-content {
+    margin: 5% auto;
+}
+
+.danger td {
+    color: red;
+}
